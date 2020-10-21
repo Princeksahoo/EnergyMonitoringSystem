@@ -1,0 +1,568 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="EnergyMonitoringSystem.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - Energy Monitoring System</title>
+    <script src="Scripts/jquery.min.js"></script>
+<%--    <script src="Scripts/jquery-3.4.1.js"></script>
+    <script src="Scripts/jquery-3.3.1.min.js"></script>--%>
+<%--    <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>--%>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Scripts/Toaster/toastr.min.css" rel="stylesheet" />
+    <script src="Scripts/Toaster/toastr.min.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="Scripts/JavaScriptUIBlocker.js"></script>
+    <%--<link href="Scripts/FontAwesome/all.css" rel="stylesheet" />
+    <script src="Scripts/FontAwesome/all.js"></script>
+    <link href="Scripts/FontAwesome/all.min.css" rel="stylesheet" />
+    <script src="Scripts/FontAwesome/all.min.js"></script>--%>
+    <script src="Scripts/DateTimePicker/moment.js"></script>
+    <script src="Scripts/DateTimePicker/bootstrap-datetimepicker.js"></script>
+    <link href="Scripts/DateTimePicker/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <script src="Scripts/bootstrap-multiselect.js"></script>
+    <link href="Scripts/bootstrap-multiselect.css" rel="stylesheet" />
+     <%-- <script src="Scripts/HighChart/export-data.js"></script>
+    <script src="Scripts/HighChart/exporting.js"></script>
+    <script src="Scripts/HighChart/highcharts-3d.js"></script>
+    <script src="Scripts/HighChart/highcharts.js"></script>--%>
+    <%--<script src="Scripts/HighChart/highcharts.js"></script>--%>
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
+    <link href="Images/iconApp.ico" rel="shortcut icon" type="image/x-icon" />
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <div class="navbar navbar-default navbar-fixed-top text-center" style="background-color: #edeef5;">
+            <div class="HeaderImage">
+                <img src="Images/iconApp.ico" height="60" style="padding: 3px" />
+            </div>
+
+            <span id="headerName" style="color: #fc3503; font-weight: bold; font-size: 30px; text-align: right; margin: auto; line-height: 60px;">Energy Monitoring System</span>
+
+            <div class="top-nav" style="width: auto; margin-top: 0px; margin-right: 3px; float: right">
+              
+                <ul class="nav top-menu" style="float: right;display:inline-block">
+                    <!-- user login dropdown start-->
+
+                    <li id="dropDownprfile" class="dropdown">
+                        
+                        <a>
+                            <span style="height: 45px; cursor: pointer; color: black;" id="btnFullScreen" onclick="screenZoomInOut();"><i class="glyphicon glyphicon-fullscreen" style="font-size: 18px; vertical-align: middle;"></i></span>
+                            <span style="height: 45px; cursor: pointer; color: black; display: none;" id="btnMinScreen" onclick="screenZoomInOut();"><i class="glyphicon glyphicon-resize-small" style="font-size: 18px; vertical-align: middle"></i></span>&nbsp;&nbsp;
+                                <span class="profile-ava dropdown-toggle" id="prfileToggle" data-toggle="dropdown" style="cursor: pointer">
+                                    <img id="prfile" alt="" src="Images/boy-512.png">
+                                </span>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <%-- <div class="log-arrow-up"></div>--%>
+                            <%--<li>
+                                <a href="#">Print Scrren<i class="glyphicon glyphicon-print" style="float:right;"></i></a>
+                            </li>
+                            <li>
+                                <a href="#">Hide Graphs<i class="glyphicon glyphicon-print" style="float:right;"></i></a>
+                            </li>--%>
+                            <li>
+                                <a href="Settings.aspx"><i class="glyphicon glyphicon-cog" style="float:right;"></i>  Settings</a>
+                            </li>
+                            <li>
+                                <a href="Logout.aspx"><i class="glyphicon glyphicon-log-out" style="float:right;"></i>  Log Out</a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+
+            </div>
+        </div>
+
+        <div id="sidebar">
+            <ul>
+                <li id="limenu" style="background-color: #2b2a3d">
+                    <div class="toggle-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </li>
+
+                <li onclick="location.href='Dashboard.aspx';"><a href="Dashboard.aspx" class="glyphicon glyphicon-dashboard"></a>&nbsp; <a class="spnhideShow" href="Dashboard.aspx">Dashboard</a>
+                </li>
+                <%--                <li onclick="location.href='#';"><a href="#" class="fas fa-chart-bar"></a>&nbsp; <a class="spnhideShow" href="#"></a>
+                </li>--%>
+                <li onclick="location.href='PowerProfile.aspx';"><a href="PowerProfile.aspx" class="glyphicon glyphicon-stats"></a>&nbsp; <a class="spnhideShow" href="PowerProfile.aspx">Power Profile</a>
+                </li>
+                <li onclick="location.href='LiveData.aspx';"><a href="LiveData.aspx" class="glyphicon glyphicon-list"></a>&nbsp; <a class="spnhideShow" href="LiveData.aspx">Live</a>
+                </li>
+                <li onclick="location.href='EnergyReportPage.aspx';" id="showReports"><a href="EnergyReportPage.aspx" class="glyphicon glyphicon-list-alt"></a>&nbsp; <a class="spnhideShow" href="EnergyReportPage.aspx">Reports</a>
+                    <%--<ul style="display:none" id="reports">
+                        <li onclick="location.href='#';" style="border-bottom: unset"><a href="#" class="glyphicon glyphicon-list-alt"></a>&nbsp; <a class="spnhideShow" href="#">Offset Correction</a>
+                        </li>
+                           <li onclick="location.href='#';" style="border-bottom: unset"><a href="#" class="glyphicon glyphicon-info-sign"></a>&nbsp; <a class="spnhideShow" href="#">SPC Report</a>
+                        </li>
+                    </ul>--%>
+                </li>
+            </ul>
+        </div>
+
+        <div class="container-fluid body-content" style="margin-left: 5px; margin-right: 5px; margin-bottom: 0px; margin-top: 20px">
+
+            <section id="Maincontent" style="">
+                <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                </asp:ContentPlaceHolder>
+            </section>
+        </div>
+
+        <%-- <div class="container body-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer>
+                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
+            </footer>
+        </div>--%>
+    </form>
+
+    <script type="text/javascript">
+        //function showReport() {
+        //    $("#reports").css('display', 'block');
+
+        //}
+        function showReport(lnk) {
+            debugger;
+            if ($('#showReports').hasClass('showProfile')) {
+                $('#showReports').removeClass('showProfile');
+                $('#reports').css('display', 'none');
+                // document.getElementById('reports').style.visibility = "hidden";
+            }
+            else {
+                $('#showReports').addClass('showProfile');
+                //document.getElementById('reports').style.visibility = "visible";
+                $('#reports').css('display', 'block');
+            }
+        }
+
+
+        $("#limenu").click(function () {
+            var widthMenu = $("#sidebar").width();
+            //alert(widthMenu);
+            if (widthMenu == 198) {
+
+                document.getElementById("sidebar").classList.toggle("active");
+                $('#sidebar').width(55);
+                //$(".spnhideShow").hide(200).css('transition','all 500ms linear');
+                $(".spnhideShow").delay(200).hide(500);
+                // $(".spnhideShow").css("transition-delay","0.5s").hide(500);
+                $("#Maincontent").css("margin-left", "55px");
+                $("#Maincontent").css("transition", "all 500ms linear");
+                //$("#li").css("margin-left", "-10px");
+
+
+            } else {
+
+                document.getElementById("sidebar").classList.toggle("active");
+                $('#sidebar').width(198);
+                // $(".spnhideShow").show(200).css('transition', 'all 500ms linear');
+                $(".spnhideShow").delay(200).show(500);
+                // $(".spnhideShow").css("transition-delay", "3s").show(500);
+                $("#Maincontent").css("margin-left", "198px");
+                $("#Maincontent").css("transition", "all 500ms linear");
+            }
+        });
+
+        function togglesidebarClick() {
+            document.getElementById("sidebar").classList.toggle("active");
+        }
+
+        var previousmenu;
+        var previosmenutext = "";
+        var currentmenu;
+
+        var currentmenutext;
+        $(window).resize(function () {
+            var h = $(".navbar-fixed-top").height();
+            console.log("tpop h" + h);
+            if (parseInt(h) > 61) {
+                $(".body-content").css("margin-top", ($(".navbar-fixed-top").height() / 4) * 3);
+                $("#sidebar").css("margin-top", $(".navbar-fixed-top").height() / 2);
+            }
+            else {
+                // $(".body-content").css("margin-top", 20);
+                $("#sidebar").css("margin-top", 0);
+            }
+        });
+        
+        function screenZoomInOut() {
+            debugger;
+            if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+                (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+                if (document.documentElement.requestFullScreen) {
+                    document.documentElement.requestFullScreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullScreen) {
+                    document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                }
+                document.getElementById("btnFullScreen").style.display = "none";
+                document.getElementById("btnMinScreen").style.display = "inline";
+            } else {
+                if (document.cancelFullScreen) {
+                    document.cancelFullScreen();
+                } else if (document.msRequestFullscreen) {
+                    document.msRequestFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitCancelFullScreen) {
+                    document.webkitCancelFullScreen();
+                }
+                document.getElementById("btnMinScreen").style.display = "none";
+                document.getElementById("btnFullScreen").style.display = "inline";
+            }
+        }
+        $(document).ready(function () {
+
+            var h = $(".navbar-fixed-top").height();
+            console.log("tpop h" + h);
+            if (parseInt(h) > 61) {
+                $(".body-content").css("margin-top", ($(".navbar-fixed-top").height() / 4) * 3);
+                $("#sidebar").css("margin-top", $(".navbar-fixed-top").height() / 2);
+            }
+            else {
+                //  $(".body-content").css("margin-top", 20);
+                $("#sidebar").css("margin-top", 0);
+
+            }
+
+            $("#Maincontent").css("margin-left", "200px");
+
+            $("#menu-toggle").click(function (e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("active");
+            });
+
+            //$("[id$=btnFullScreen]").click(function () {
+            //    if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+            //        (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+            //        if (document.documentElement.requestFullScreen) {
+            //            document.documentElement.requestFullScreen();
+            //        } else if (document.documentElement.msRequestFullscreen) {
+            //            document.documentElement.msRequestFullscreen();
+            //        } else if (document.documentElement.mozRequestFullScreen) {
+            //            document.documentElement.mozRequestFullScreen();
+            //        } else if (document.documentElement.webkitRequestFullScreen) {
+            //            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+            //        }
+            //    } else {
+            //        if (document.cancelFullScreen) {
+            //            document.cancelFullScreen();
+            //        } else if (document.msRequestFullscreen) {
+            //            document.msRequestFullscreen();
+            //        } else if (document.mozCancelFullScreen) {
+            //            document.mozCancelFullScreen();
+            //        } else if (document.webkitCancelFullScreen) {
+            //            document.webkitCancelFullScreen();
+            //        }
+            //    }
+            //    debugger;
+            //    document.getElementById("btnFullScreen").style.display = "none";
+            //    document.getElementById("btnMinScreen").style.display = "inline";
+            //});
+            //$("[id$=btnMinScreen]").click(function () {
+            //    if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+            //        (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+            //        if (document.documentElement.requestFullScreen) {
+            //            document.documentElement.requestFullScreen();
+            //        } else if (document.documentElement.msRequestFullscreen) {
+            //            document.documentElement.msRequestFullscreen();
+            //        } else if (document.documentElement.mozRequestFullScreen) {
+            //            document.documentElement.mozRequestFullScreen();
+            //        } else if (document.documentElement.webkitRequestFullScreen) {
+            //            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+            //        }
+            //    } else {
+            //        if (document.cancelFullScreen) {
+            //            document.cancelFullScreen();
+            //        } else if (document.msRequestFullscreen) {
+            //            document.msRequestFullscreen();
+            //        } else if (document.mozCancelFullScreen) {
+            //            document.mozCancelFullScreen();
+            //        } else if (document.webkitCancelFullScreen) {
+            //            document.webkitCancelFullScreen();
+            //        }
+            //    }
+            //    document.getElementById("btnMinScreen").style.display = "none";
+            //    document.getElementById("btnFullScreen").style.display = "inline";
+            //});
+
+            $("#prfile").click(function () {
+                var profile = $("#dropDownprfile").hasClass("dropdown open");
+                if (profile) {
+                    $("#dropDownprfile").removeClass("dropdown open");
+                    $("#dropDownprfile").addClass("dropdown");
+                    $("#prfileToggle").attr("aria-expanded", true);
+                } else {
+                    $("#dropDownprfile").removeClass("dropdown");
+                    $("#dropDownprfile").addClass("dropdown open");
+                    $("#prfileToggle").attr("aria-expanded", false);
+                }
+                return false;
+            });
+        });
+
+    </script>
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+
+        .HeaderImage {
+            flex: 1;
+            float: left;
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 50px;
+            width: 200px;
+            height: 100%;
+            background-color: #4f4e63;
+            border: 1px solid #4f4e63;
+            transition: all 500ms linear;
+            z-index: 200;
+        }
+
+            #sidebar.active {
+                left: 0px;
+            }
+
+            #sidebar ul li {
+                color: white;
+                list-style: none;
+                padding: 15px;
+                border-bottom: 1px solid #272633;
+            }
+
+                #sidebar ul li a {
+                    color: white;
+                    font-size: 15px;
+                    text-decoration: none;
+                }
+
+                #sidebar ul li .toggle-btn span {
+                    display: block;
+                    width: 25px;
+                    height: 4px;
+                    background-color: #fc3503;
+                    /*margin: 3px 0px 3px 90%;*/
+                    margin: 3px 0px;
+                    border-radius: 2px;
+                }
+
+        .btnImgPanel {
+            margin-bottom: 5px;
+        }
+
+        .footerPanel {
+            display: flex;
+        }
+
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+            border-radius: 10px;
+        }
+
+            ::-webkit-scrollbar-track:hover {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                background-color: #F5F5F5;
+                border-radius: 10px;
+            }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+            background-color: #F5F5F5;
+            border-radius: 10px;
+            box-shadow: inset 0 0 5px grey;
+        }
+
+            ::-webkit-scrollbar:hover {
+                width: 15px;
+                height: 15px;
+                background-color: #F5F5F5;
+                border-radius: 10px;
+                box-shadow: inset 0 0 5px grey;
+            }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            /*background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.44, rgb(77, 133, 129)), color-stop(0.72, rgb(33, 133, 129)), color-stop(0.86, rgb(13, 82, 77)));*/
+            /*background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.44,#9c9c9c), color-stop(0.72,#c9c9c9 ), color-stop(0.86,#9c9c9c));*/
+            background-color: #9c9c9c;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                border-radius: 10px;
+                /*background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.44, rgb(77, 133, 129)), color-stop(0.72, rgb(33, 133, 129)), color-stop(0.86, rgb(13, 82, 77)));*/
+                /*background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.44,#9c9c9c), color-stop(0.72,#c9c9c9 ), color-stop(0.86,#9c9c9c));*/
+                background-color: #9c9c9c;
+            }
+
+        div:hover::-webkit-scrollbar-corner {
+            width: 15px;
+            /*background-color: red !important;*/
+        }
+
+
+        /*Content Page CSS*/
+        .Btns {
+            background-color: #4f4e63;
+            color: white;
+            padding: 5px;
+            min-width: 100px;
+            border: 1px solid #4f4e63;
+            border-radius: 4px;
+        }
+        .form-control, .dropdown-menu, .filter-option, .tblSetting, .control-label {
+            font-family: Verdana;
+            font-style: normal;
+        }
+
+        .profile-ava img {
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            border: 2px solid #688a7e;
+            display: inline-block;
+        }
+
+        /*User dropdown Menu*/
+        .open > .dropdown-menu {
+            display: block;
+            left:-90px;
+        }
+        .dropdown-menu.extended.logout > li > a {
+            border-bottom: 1px solid #EBEBEB !important;
+            font-size: 14px;
+            list-style: none;
+            padding: 15px 10px !important;
+            width: 100%;
+            display: inline-block;
+        }
+
+        .dropdown-menu.extended li a {
+            padding: 15px 10px !important;
+            width: 100%;
+            display: inline-block;
+        }
+
+        .dropdown-menu.extended li a {
+            border-bottom: 1px solid #EBEBEB !important;
+            font-size: 12px;
+            list-style: none;
+        }
+
+        .dropdown-menu > li > a {
+            color: #797979;
+        }
+
+        .dropdown-menu > li > a {
+            display: block;
+            padding: 3px 20px;
+            clear: both;
+            font-weight: normal;
+            line-height: 1.428571429;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        a, a:hover, a:focus {
+            text-decoration: none;
+            outline: none;
+            outline: 0;
+        }
+
+        a {
+            color: #428bca;
+            text-decoration: none;
+        }
+
+        *, *:before, *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .dropdown-menu.extended.logout > li {
+            float: left;
+            text-align: left;
+            width: 100%;
+        }
+
+        ul li {
+            list-style: none;
+        }
+
+        user agent stylesheet
+        li {
+            text-align: match-parent;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 85%;
+            left: -90px;
+            z-index: 1000;
+            display: none;
+            float: left;
+            min-width: 160px;
+            padding: 5px 0;
+            margin: 2px 0 0;
+            font-size: 18px;
+            list-style: none;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
+            -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+            background-clip: padding-box;
+        }
+    </style>
+</body>
+</html>
